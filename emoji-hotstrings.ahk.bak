@@ -7645,30 +7645,9 @@ AddEmojiShortcut:
 	endMarker   := "; === EMOJI HOTSTRINGS END ==="
 
 	FileRead, src, %A_ScriptFullPath%
-
 	sPos := InStr(src, startMarker)
 	ePos := InStr(src, endMarker)
 
-	if (!sPos || !ePos || ePos <= sPos) {
-		MsgBox, Markers not found or invalid.`nStart=%sPos% End=%ePos%
-		return
-	}
-
-	; isolate the emoji section
-	sectionStart := sPos + StrLen(startMarker)
-	sectionLen   := ePos - sectionStart
-	section := SubStr(src, sectionStart, sectionLen)
-
-	; find emoji inside the section
-	emojiPosInSection := InStr(section, Emoji)
-
-	if (!emojiPosInSection) {
-		MsgBox, Emoji not found in section.
-		return
-	}
-
-	; convert to absolute file position
-	emojiPosInFile := sectionStart + emojiPosInSection - 1
-
-	MsgBox, Emoji found`nIn section pos: %emojiPosInSection%`nIn file pos: %emojiPosInFile%
+	MsgBox, Start=%sPos%`nEnd=%ePos%
+    MsgBox, You typed emoji: %Emoji%`nShortcut: %Shortcut%
 return

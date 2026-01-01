@@ -5136,6 +5136,7 @@ return
 return
 
 ::;stuck_out_tongue::
+::;tongue_out::
     Send 😛
 return
 
@@ -6030,6 +6031,7 @@ return
 return
 ::;drooling::
 ::;drooling_face::
+::;yum::
     Send 🤤
 return
 ::;lying::
@@ -7608,6 +7610,7 @@ return
 return
 
 ::;index_pointing_at_the_viewer::
+::;pointing_at_you::
     Send 🫵
 return
 
@@ -7650,25 +7653,74 @@ AddEmojiShortcut:
 	ePos := InStr(src, endMarker)
 
 	if (!sPos || !ePos || ePos <= sPos) {
-		MsgBox, Markers not found or invalid.`nStart=%sPos% End=%ePos%
+		MsgBox, Marker error`nStart=%sPos% End=%ePos%
 		return
 	}
 
-	; isolate the emoji section
 	sectionStart := sPos + StrLen(startMarker)
 	sectionLen   := ePos - sectionStart
 	section := SubStr(src, sectionStart, sectionLen)
 
-	; find emoji inside the section
 	emojiPosInSection := InStr(section, Emoji)
-
 	if (!emojiPosInSection) {
-		MsgBox, Emoji not found in section.
+		MsgBox, Emoji not found in section
 		return
 	}
 
-	; convert to absolute file position
+	; absolute file position of emoji
 	emojiPosInFile := sectionStart + emojiPosInSection - 1
 
-	MsgBox, Emoji found`nIn section pos: %emojiPosInSection%`nIn file pos: %emojiPosInFile%
+	; normalize shortcut: ensure it starts with ;
+	sc := Trim(Shortcut)
+	if (SubStr(sc, 1, 1) != ";")
+		sc := ";" . sc
+
+	newLine := "`r`n::" . sc . "::"
+
+	insertPos := emojiPosInFile - 10
+	if (insertPos < 1) {
+		MsgBox, Insert position underflow (too close to start)
+		return
+	}
+newSrc := SubStr(src, 1, insertPos - 1) . newLine . SubStr(src, insertPos)
+; Preview 40 chars before/after insert point
+	prevStart := insertPos - 40
+	if (prevStart < 1)
+		prevStart := 1
+	preview := SubStr(newSrc, prevStart, 120)
+
+	MsgBox, 4, Confirm insert,
+(
+Insert: %newLine%
+
+At file pos: %insertPos%
+
+Preview:
+%preview%
+)
+
+	IfMsgBox, No
+		return
+
+
+
+	; backup + write
+	FileDelete, %A_ScriptFullPath%.bak
+	FileAppend, %src%, %A_ScriptFullPath%.bak, UTF-8
+
+	tmp := A_ScriptFullPath . ".tmp"
+	FileDelete, %tmp%
+	FileAppend, %newSrc%, %tmp%, UTF-8
+	if (ErrorLevel) {
+		MsgBox, Failed writing tmp
+		return
+	}
+
+	FileMove, %tmp%, %A_ScriptFullPath%, 1
+	if (ErrorLevel) {
+		MsgBox, Failed replacing script (maybe locked)
+		return
+	}
+
+	Reload
 return

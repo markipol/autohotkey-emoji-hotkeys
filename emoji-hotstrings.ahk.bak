@@ -3324,6 +3324,7 @@ return
 
 ::;+1::
 ::;thumbsup::
+::;thumbs_up::
     Send 👍️
 return
 
@@ -4021,6 +4022,7 @@ return
 ::;breakup::
 ::;broken_heart::
 ::;brokenheart::
+::;heartbreak::
     Send 💔
 return
 
@@ -4188,7 +4190,7 @@ return
 ::;computer::
     Send 💻️
 return
-
+::;suitcase::
 ::;briefcase::
     Send 💼
 return
@@ -6007,6 +6009,7 @@ return
 return
 
 ::;crossed_fingers::
+::;fingers_crossed::
     Send 🤞
 return
 
@@ -7078,6 +7081,7 @@ return
 return
 
 ::;billed_cap::
+::;cap::
     Send 🧢
 return
 
@@ -7610,6 +7614,7 @@ return
 return
 
 ::;index_pointing_at_the_viewer::
+::;pointing_at_you::
     Send 🫵
 return
 
